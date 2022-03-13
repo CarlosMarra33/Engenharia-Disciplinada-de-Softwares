@@ -1,4 +1,4 @@
-package venturaHR.models;
+package com.venturaHR.models;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

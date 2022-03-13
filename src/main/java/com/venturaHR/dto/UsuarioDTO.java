@@ -1,20 +1,31 @@
-package venturaHR.modelsDTO;
+package com.venturaHR.dto;
 
-public class UsuarioRequestDTO {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.springframework.lang.NonNull;
+
+public class UsuarioDTO {
     
+    @JsonProperty("Nome")
     private String nome;
+    @NonNull
+    @JsonProperty("Email")
     private  String email;
+    @JsonProperty("Password")
     private String password;
+    @JsonProperty("CPF")
     private String cpf;
+    @JsonProperty("CNPJ")
     private String cnpj;
-    public UsuarioRequestDTO(String nome, String email, String password, String cpf, String cnpj) {
+    
+    public UsuarioDTO(String nome, String email, String password, String cpf, String cnpj) {
         this.nome = nome;
         this.email = email;
         this.password = password;
         this.cpf = cpf;
         this.cnpj = cnpj;
     }
-    public UsuarioRequestDTO() {
+    public UsuarioDTO() {
     }
     public String getNome() {
         return nome;

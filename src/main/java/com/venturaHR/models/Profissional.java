@@ -1,4 +1,4 @@
-package venturaHR.models;
+package com.venturaHR.models;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -9,11 +9,13 @@ public class Profissional extends Usuario{
     
     private String cpf;
 
-    public Profissional(String nome, String email, String password) {
-        super(nome, email, password);
-    }
 
     public Profissional() {
+    }
+
+    public Profissional(String nome, String email, String password, String cpf) {
+        super(nome, email, password);
+        this.cpf = cpf;
     }
 
     public String getCpf() {

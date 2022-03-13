@@ -1,5 +1,5 @@
 
-package venturaHR.models;
+package com.venturaHR.models;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
