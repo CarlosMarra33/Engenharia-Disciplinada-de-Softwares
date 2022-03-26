@@ -1,4 +1,4 @@
-package com.venturaHR.dto;
+package com.venturaHR.controllers.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -6,56 +6,57 @@ import org.springframework.lang.NonNull;
 
 public class UsuarioDTO {
     
-    @JsonProperty("Nome")
+    @JsonProperty
     private String nome;
     @NonNull
-    @JsonProperty("Email")
+    @JsonProperty
     private  String email;
-    @JsonProperty("Password")
+    @JsonProperty
     private String password;
-    @JsonProperty("CPF")
+    @JsonProperty
     private String cpf;
-    @JsonProperty("CNPJ")
+    @JsonProperty
     private String cnpj;
+    @JsonProperty
+    private int tipoConta;
     
-    public UsuarioDTO(String nome, String email, String password, String cpf, String cnpj) {
+    public UsuarioDTO(String nome, String email, String password, String cpf, String cnpj, int tipoConta) {
         this.nome = nome;
         this.email = email;
         this.password = password;
         this.cpf = cpf;
         this.cnpj = cnpj;
+        this.tipoConta = tipoConta;
     }
     public UsuarioDTO() {
     }
+
     public String getNome() {
         return nome;
     }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+
     public String getEmail() {
         return email;
     }
-    public void setEmail(String email) {
-        this.email = email;
-    }
+
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
+
     public String getCpf() {
         return cpf;
     }
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
+
     public String getCnpj() {
         return cnpj;
     }
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
+
+    public int getTipoConta(){
+        return this.tipoConta;
     }
 
 }

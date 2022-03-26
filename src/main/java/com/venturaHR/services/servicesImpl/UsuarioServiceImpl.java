@@ -1,51 +1,58 @@
 package com.venturaHR.services.servicesImpl;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
+import com.venturaHR.models.Empresa;
 import com.venturaHR.models.Profissional;
 import com.venturaHR.models.Usuario;
 
+import com.venturaHR.services.security.CriptografiaSenha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.venturaHR.dto.UsuarioDTO;
-import com.venturaHR.models.Empresa;
-import com.venturaHR.repositorio.IUsuarioRepositorio;
+import com.venturaHR.controllers.dto.UsuarioDTO;
+import com.venturaHR.repositorio.IProfissionalRepositorio;
 import com.venturaHR.services.UsuarioService;
 
 @Component
-public class UsuarioServiceImpl implements UsuarioService{
-    
+public class UsuarioServiceImpl implements UsuarioService {
+
     @Autowired
-    private IUsuarioRepositorio repositorio;
+    private IProfissionalRepositorio repositorio;
 
-    @Override
-    public void criacaoDeConta(UsuarioDTO usuarioDto) throws Exception{
-        Usuario usuario = new Usuario();
-        if (repositorio.findAllByEmail(usuarioDto.getEmail()).isPresent()) {
-            throw new Exception("Usuário já existe");
-        }else{
-            if (usuarioDto.getCpf() == null && usuarioDto.getCnpj()!= null) {
-                usuario = new Empresa(usuarioDto.getNome(), usuarioDto.getEmail(), usuarioDto.getPassword(), usuarioDto.getCnpj());
-            }else if(usuarioDto.getCpf() != null && usuarioDto.getCnpj() == null){
-                usuario = new Profissional(usuarioDto.getNome(), usuarioDto.getEmail(), usuarioDto.getPassword(), usuarioDto.getCnpj());
-            }else{
-                throw new Exception("cpf e cnpj não podem ser nulos");
-            }
-            try {
-                repositorio.save(usuario);
-            } catch (Exception e) {
-                throw new SQLException(e);
-            }
-        }
+    private CriptografiaSenha criptografiaSenha;
 
+    public UsuarioServiceImpl(CriptografiaSenha criptografiaSenha) {
+        this.criptografiaSenha = criptografiaSenha;
     }
 
     @Override
-    public UsuarioDTO checarUsuarioLogin(String email, String password) throws Exception {
-        UsuarioDTO resposta = repositorio.findByEmailAndPassword(email, password);
-        
+    public void criacaoDeConta(UsuarioDTO usuarioDto) throws Exception {
+        Usuario usuario;
+        usuarioDto.setPassword(criptografiaSenha.criptografarSenha(usuarioDto.getPassword()));
+        if(usuarioDto.getTipoConta() == 1){
+            usuario = new Profissional(usuarioDto.getNome(),
+                    usuarioDto.getEmail(),
+                    usuarioDto.getPassword(),
+                    usuarioDto.getCpf()
+            );
+        }else {
+            usuario = new Empresa(
+                    usuarioDto.getNome(),
+                    usuarioDto.getEmail(),
+                    usuarioDto.getPassword(),
+                    usuarioDto.getCnpj()
+            );
+        }
+        repositorio.save(usuario);
+    }
+
+    @Override
+    public Usuario checarUsuarioLogin(String email, String password) throws Exception {
+        Usuario resposta = repositorio.findByEmail(email);
+        if (criptografiaSenha.checarSenha(password, resposta.getPassword())){
+
+        }else {
+            return null;
+        }
         return resposta;
     }
 }
