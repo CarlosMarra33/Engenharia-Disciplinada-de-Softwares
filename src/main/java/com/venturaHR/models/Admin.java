@@ -12,7 +12,7 @@ import javax.persistence.Entity;
 @Setter
 @NoArgsConstructor
 public class Admin extends Usuario{
-    @Column(unique=true, nullable = false, columnDefinition = "varchar(50) default '00'")
+    @Column(unique=false, nullable = true)
     private String matricula;
 
     public Admin(String nome, String email, String password, String matricula) {

@@ -5,10 +5,12 @@
 package com.venturaHR.controllers;
 
 
-import com.venturaHR.models.Usuario;
+import com.venturaHR.controllers.dto.UserLoginDTO;
+import com.venturaHR.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.sql.SQLException;
 
 import com.venturaHR.controllers.dto.UsuarioDTO;
-import com.venturaHR.services.UsuarioService;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/")
 public class UsuarioController {
     
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
     @Autowired
     public UsuarioController(UsuarioService usuarioService){
         this.usuarioService = usuarioService;
@@ -48,17 +49,17 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object>fazerLogin(@RequestBody UsuarioDTO payload) throws SQLException {
+    public ResponseEntity<UserLoginDTO> fazerLogin(@RequestBody UsuarioDTO payload) throws SQLException {
 
         try {
-            Usuario usuario = usuarioService.checarUsuarioLogin(payload.getEmail(), payload.getPassword());
+            UserLoginDTO usuario = usuarioService.checarUsuarioLogin(payload.getEmail(), payload.getPassword());
             if(usuario != null){
                 return ResponseEntity.ok(usuario);
             }else{
                 return new ResponseEntity<>(usuario, HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-           return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+           return new ResponseEntity<com.venturaHR.controllers.dto.UserLoginDTO>((MultiValueMap<String, String>) e, HttpStatus.BAD_REQUEST);
         }
     }
 }

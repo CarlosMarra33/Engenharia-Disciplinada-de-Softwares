@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Empresa extends Usuario {
 
-    @Column(unique=true, nullable = false, columnDefinition = "varchar(50) default '00'")
+    @Column(unique=false, nullable = true)
     private String cpnj = "";
 
     public Empresa(String nome, String email, String password, String cpnj) {

@@ -14,9 +14,9 @@ public class UsuarioDTO {
     @JsonProperty
     private String password;
     @JsonProperty
-    private String cpf;
+    private String cpf= null;
     @JsonProperty
-    private String cnpj;
+    private String cnpj = null;
     @JsonProperty
     private int tipoConta;
     

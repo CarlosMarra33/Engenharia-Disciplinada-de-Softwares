@@ -16,7 +16,7 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 public class Profissional extends Usuario{
 
-    @Column(unique=true, nullable = false, columnDefinition = "varchar(50) default '00'")
+    @Column(unique=false, nullable = true)
     private String cpf = "";
 
     public Profissional(String nome, String email, String password, String cpf) {

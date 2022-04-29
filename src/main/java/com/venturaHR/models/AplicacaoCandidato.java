@@ -11,6 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class AplicacaoCandidato {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "aplicacao_candidato_id", nullable = false)
     private Long aplicacaoCandidatoId;
 

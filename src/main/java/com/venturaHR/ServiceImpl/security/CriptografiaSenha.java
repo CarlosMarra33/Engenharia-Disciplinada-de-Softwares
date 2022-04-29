@@ -1,5 +1,6 @@
-package com.venturaHR.services.security;
+package com.venturaHR.ServiceImpl.security;
 
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -10,17 +11,16 @@ public class CriptografiaSenha {
     private final String PASSCHAR = "momo";
 
     public String criptografarSenha(String textoOriginal){
-        BasicTextEncryptor encriptador = new BasicTextEncryptor();
+        StandardPBEStringEncryptor encriptador = new StandardPBEStringEncryptor();
         encriptador.setPasswordCharArray(PASSCHAR.toCharArray());
         return encriptador.encrypt(textoOriginal);
     }
 
     public Boolean checarSenha(String senhaPayload, String senhaBanco){
-        BasicTextEncryptor encriptador = new BasicTextEncryptor();
+//         encryptor = new StandardPBEStringEncryptor();
+        StandardPBEStringEncryptor encriptador = new StandardPBEStringEncryptor();
         encriptador.setPasswordCharArray(PASSCHAR.toCharArray());
-        if (senhaPayload == encriptador.decrypt(senhaBanco)){
-            return true;
-        }
-        return false;
+        String senhaAberta = encriptador.decrypt(senhaBanco);
+        return senhaPayload.equals(senhaAberta);
     }
 }

@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -16,16 +14,14 @@ import javax.persistence.Id;
 @NoArgsConstructor
 public class Criterio {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "criterio_id", nullable = false)
     private Long criterioId;
 
     private String skillNome;
+    private int peso;
 
-    public Long getCriterioId() {
-        return criterioId;
-    }
-
-    public void setCriterioId(Long criterioId) {
-        this.criterioId = criterioId;
-    }
+    @ManyToOne
+    @JoinColumn(name = "vaga_id")
+    private Vaga vagaId;
 }
