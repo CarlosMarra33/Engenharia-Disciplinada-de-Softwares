@@ -1,4 +1,4 @@
-package com.venturaHR.models;
+package com.venturaHR.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Getter
@@ -23,6 +22,7 @@ public class Vaga {
     private String titulo;
     private String cargo;
     private Date dataDeCriacao;
+    private int status;
 
     @ManyToOne
     @JoinColumn(name = "empresa_id")

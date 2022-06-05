@@ -1,15 +1,12 @@
 
-package com.venturaHR.models;
+package com.venturaHR.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 @Getter
@@ -29,8 +26,11 @@ public class  Usuario {
 
     private String password;
 
+    private int statusConta;
 
-    public Usuario(String nome, String email, String password) {
+
+    public Usuario(String nome, String email, String password, int statusConta) {
+        this.statusConta = statusConta;
         this.nome = nome;
         this.email = email;
         this.password = password;

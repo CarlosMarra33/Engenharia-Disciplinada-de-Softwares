@@ -1,4 +1,4 @@
-package com.venturaHR.models;
+package com.venturaHR.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

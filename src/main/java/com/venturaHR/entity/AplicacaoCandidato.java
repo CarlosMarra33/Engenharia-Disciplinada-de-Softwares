@@ -1,4 +1,4 @@
-package com.venturaHR.models;
+package com.venturaHR.entity;
 
 import lombok.*;
 
@@ -16,8 +16,8 @@ public class AplicacaoCandidato {
     private Long aplicacaoCandidatoId;
 
     @OneToOne
-    @JoinColumn(name = "profissional_id")
-    private Profissional profissional;
+    @JoinColumn(name = "candidato_id")
+    private Candidato candidato;
     @OneToOne
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;

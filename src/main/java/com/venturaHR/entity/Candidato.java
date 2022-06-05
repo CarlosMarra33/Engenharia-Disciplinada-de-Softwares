@@ -1,4 +1,4 @@
-package com.venturaHR.models;
+package com.venturaHR.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
@@ -14,13 +13,13 @@ import javax.persistence.Entity;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Profissional extends Usuario{
+public class Candidato extends Usuario{
 
     @Column(unique=false, nullable = true)
     private String cpf = "";
 
-    public Profissional(String nome, String email, String password, String cpf) {
-        super(nome, email, password);
+    public Candidato(String nome, String email, String password, int statusConta, String cpf) {
+        super(nome, email, password, statusConta);
         this.cpf = cpf;
     }
 }

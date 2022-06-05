@@ -1,4 +1,4 @@
-package com.venturaHR.models;
+package com.venturaHR.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,10 +16,10 @@ import lombok.Setter;
 public class Empresa extends Usuario {
 
     @Column(unique=false, nullable = true)
-    private String cpnj = "";
+    private String cpnj;
 
-    public Empresa(String nome, String email, String password, String cpnj) {
-        super(nome, email, password);
+    public Empresa(String nome, String email, String password, int statusConta, String cnpj) {
+        super(nome, email, password, statusConta);
         this.cpnj = cpnj;
     }
 }
