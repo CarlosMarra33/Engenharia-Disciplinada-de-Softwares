@@ -1,4 +1,4 @@
-package com.venturaHR.controllers.dto;
+package com.venturaHR.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,6 +17,8 @@ public class UsuarioDTO {
     private String cpf= null;
     @JsonProperty
     private String cnpj = null;
+    @JsonProperty
+    private String matricula = null;
     @JsonProperty
     private int tipoConta;
     
@@ -57,6 +59,14 @@ public class UsuarioDTO {
 
     public int getTipoConta(){
         return this.tipoConta;
+    }
+
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
     }
 
 }
