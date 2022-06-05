@@ -1,7 +1,13 @@
 package com.venturaHR.service;
 
-import com.venturaHR.controllers.dto.RequestVagaDTO;
+import com.venturaHR.controller.dto.VagaDTO;
+
+import java.util.List;
 
 public interface VagaService {
-    public void criacaoDeVaga(RequestVagaDTO vaga);
+    void criacaoDeVaga(VagaDTO vaga);
+    void desativarVaga(Long idVaga);
+    void cancelarVaga(Long idVaga);
+
+    List<VagaDTO> pesquisarVagaPorCargo(String cargo);
 }
