@@ -52,8 +52,12 @@ public class VagaController {
     }
     @GetMapping("/pesquisarVaga")
     public ResponseEntity pesquisarVaga(@RequestBody String cargo){
-        List<VagaDTO> listVagas = vagaService.pesquisarVagaPorCargo(cargo);
-        return null;
+        try{
+            List<VagaDTO> listVagas = vagaService.pesquisarVagaPorCargo(cargo);
+            return ResponseEntity.ok(listVagas);
+        }catch (Exception e){
+            return new ResponseEntity(e.toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

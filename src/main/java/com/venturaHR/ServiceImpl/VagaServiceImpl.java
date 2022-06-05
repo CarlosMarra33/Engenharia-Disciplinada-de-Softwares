@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,10 +85,39 @@ public class VagaServiceImpl implements VagaService {
 
     @Override
     public List<VagaDTO> pesquisarVagaPorCargo(String cargo) {
-        Optional<List<Vaga>> listaVaga = vagaRepositorio.findVagaByCargo(cargo);
+        List<VagaDTO> respostaVagas = new ArrayList<>();
+        List<String> critNameTemp = new ArrayList<>();
+        List<Integer> critPesoTemp = new ArrayList<>();
+        Optional<List<Vaga>> optionalVagaList = vagaRepositorio.findVagaByCargo(cargo);
+        List<Vaga> vagas = new ArrayList<>();
+        List<Criterio> criterios = new ArrayList<>();
 
 
-        return null;
+        if (optionalVagaList.isPresent()) vagas = optionalVagaList.get();
+        Optional<List<Criterio>> criteriosData = criterioRepositorio.findCriterioByVaga(vagas);
+        if (criteriosData.isPresent()){
+            criterios = criteriosData.get();
+        }
+        for (Vaga v: vagas){
+            VagaDTO vaga = new VagaDTO();
+            critNameTemp = new ArrayList<>();
+            critPesoTemp = new ArrayList<>();
+            vaga.setCargo(v.getCargo());
+            vaga.setTitulo(v.getTitulo());
+            vaga.setEmail(v.getEmpresa().getEmail());
+            vaga.setDataCriacao(v.getDataDeCriacao().toString());
+            for (Criterio c: criterios){
+                if (c.getVagaId() == v){
+                    critNameTemp.add(c.getSkillNome());
+                    critPesoTemp.add(c.getPeso());
+                }
+            }
+            vaga.setCriterios(critNameTemp);
+            vaga.setPesos(critPesoTemp);
+            respostaVagas.add(vaga);
+        }
+
+        return respostaVagas;
     }
 
     public void criacaoCriterio(Vaga vaga, VagaDTO vagaDTO){
