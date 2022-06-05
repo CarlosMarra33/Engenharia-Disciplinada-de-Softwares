@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.venturaHR.controllers;
+package com.venturaHR.controller;
 
 
-import com.venturaHR.controllers.dto.UserLoginDTO;
+import com.venturaHR.controller.dto.UserLoginDTO;
 import com.venturaHR.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
 
-import com.venturaHR.controllers.dto.UsuarioDTO;
+import com.venturaHR.controller.dto.UsuarioDTO;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.HttpClientErrorException;
 
 
 @RestController
@@ -39,7 +40,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/cadastro")
-    public ResponseEntity<?> cadastro(@RequestBody UsuarioDTO payload){
+    public ResponseEntity cadastro(@RequestBody UsuarioDTO payload){
         try {
             usuarioService.criacaoDeConta(payload);
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -49,17 +50,29 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginDTO> fazerLogin(@RequestBody UsuarioDTO payload) throws SQLException {
+    public ResponseEntity fazerLogin(@RequestBody UsuarioDTO payload){
 
         try {
             UserLoginDTO usuario = usuarioService.checarUsuarioLogin(payload.getEmail(), payload.getPassword());
             if(usuario != null){
                 return ResponseEntity.ok(usuario);
             }else{
-                return new ResponseEntity<>(usuario, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("usuario não encontrado" ,HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-           return new ResponseEntity<com.venturaHR.controllers.dto.UserLoginDTO>((MultiValueMap<String, String>) e, HttpStatus.BAD_REQUEST);
+           return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/desativarConta")
+    public ResponseEntity<?> desativarConta(@RequestBody String email){
+        try {
+            usuarioService.desativarConta(email);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 }
