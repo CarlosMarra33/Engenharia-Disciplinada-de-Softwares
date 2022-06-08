@@ -54,6 +54,7 @@ public class VagaServiceImpl implements VagaService {
             vaga.setCargo(vagaDTO.getCargo());
             vaga.setEmpresa(usuarioEmpresa);
             vaga.setStatus(VagaEnum.STATUS_VAGA_ATIVO.getValor());
+            vaga.setDescricao(vagaDTO.getDescricao());
             vagaRepositorio.save(vaga);
             criacaoCriterio(vaga, vagaDTO);
         } catch (Exception e) {

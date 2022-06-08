@@ -20,6 +20,8 @@ public class VagaDTO {
     @JsonProperty
     private String cargo;
     @JsonProperty
+    private String descricao;
+    @JsonProperty
     private String dataCriacao;
     @JsonProperty
     private List<String> criterios;

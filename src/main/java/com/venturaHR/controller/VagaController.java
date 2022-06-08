@@ -15,49 +15,6 @@ import java.util.List;
 @RequestMapping("/vaga")
 public class VagaController {
 
-    @Autowired
-    private VagaService vagaService;
 
-    @PostMapping("/criacao")
-    public ResponseEntity<?> criarVaga(@RequestBody VagaDTO payload){
-        try {
-            vagaService.criacaoDeVaga(payload);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping("/desativar_vaga")
-    public ResponseEntity<?> desativarVaga(@RequestParam Long idVaga, @RequestHeader String token) {
-
-        try {
-//            if(!segurancaService.validacao(token)) {
-//                throw new UnauthorizedException("token inválido!");
-//            }
-            vagaService.desativarVaga(idVaga);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-    @PostMapping("/cancelar_vaga")
-    public ResponseEntity<?> cancelarVaga(@RequestParam Long idVaga){
-        try {
-            vagaService.cancelarVaga(idVaga);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-        }
-    }
-    @GetMapping("/pesquisarVaga")
-    public ResponseEntity pesquisarVaga(@RequestBody String cargo){
-        try{
-            List<VagaDTO> listVagas = vagaService.pesquisarVagaPorCargo(cargo);
-            return ResponseEntity.ok(listVagas);
-        }catch (Exception e){
-            return new ResponseEntity(e.toString(), HttpStatus.BAD_REQUEST);
-        }
-    }
 
 }
