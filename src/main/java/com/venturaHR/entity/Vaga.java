@@ -21,6 +21,7 @@ public class Vaga {
 
     private String titulo;
     private String cargo;
+    private String descricao;
     private Date dataDeCriacao;
     private int status;
 
