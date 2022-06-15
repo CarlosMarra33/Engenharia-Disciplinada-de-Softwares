@@ -7,21 +7,22 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Criterio {
+public class CriterioCandidato {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "criterio_id", nullable = false)
+    @Column(name = "criterio_candidato_id", nullable = false)
     private Long criterioId;
 
-    private String criterioNome;
+    private String criterio;
     private int peso;
 
     @ManyToOne
-    @JoinColumn(name = "vaga_id")
-    private Vaga vagaId;
+    @JoinColumn(name = "RespostaCandidato_Id")
+    private RespostaVaga resposta;
 }

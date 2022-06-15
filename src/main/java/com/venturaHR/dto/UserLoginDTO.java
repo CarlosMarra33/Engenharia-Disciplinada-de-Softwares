@@ -1,4 +1,4 @@
-package com.venturaHR.controller.dto;
+package com.venturaHR.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -6,25 +6,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VagaDTO {
+public class UserLoginDTO {
+
+    @JsonProperty
+    private String nome;
     @JsonProperty
     private String email;
     @JsonProperty
-    private String titulo;
+    private int TipoConta;
     @JsonProperty
-    private String cargo;
+    private String token;
     @JsonProperty
-    private String descricao;
+    private String cnpj;
     @JsonProperty
-    private String dataCriacao;
+    private String cpf;
     @JsonProperty
-    private List<String> criterios;
-    @JsonProperty
-    private List<Integer> pesos;
+    private String matricula;
 }

@@ -1,4 +1,4 @@
-package com.venturaHR.controller.dto;
+package com.venturaHR.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

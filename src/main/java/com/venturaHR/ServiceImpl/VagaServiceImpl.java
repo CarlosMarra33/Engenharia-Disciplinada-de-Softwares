@@ -1,11 +1,9 @@
 package com.venturaHR.ServiceImpl;
 
 import com.venturaHR.common.VagaEnum;
-import com.venturaHR.controller.dto.VagaDTO;
-import com.venturaHR.entity.Criterio;
-import com.venturaHR.entity.Empresa;
-import com.venturaHR.entity.Usuario;
-import com.venturaHR.entity.Vaga;
+import com.venturaHR.dto.CriterioDTO;
+import com.venturaHR.dto.VagaDTO;
+import com.venturaHR.entity.*;
 import com.venturaHR.exception.BadRequestException;
 import com.venturaHR.repository.ICriterioRepositorio;
 import com.venturaHR.repository.IUsuarioRepositorio;
@@ -30,6 +28,7 @@ public class VagaServiceImpl implements VagaService {
     private IVagaRepositorio vagaRepositorio;
     @Autowired
     private ICriterioRepositorio criterioRepositorio;
+
 
 
 
@@ -87,47 +86,138 @@ public class VagaServiceImpl implements VagaService {
     @Override
     public List<VagaDTO> pesquisarVagaPorCargo(String cargo) {
         List<VagaDTO> respostaVagas = new ArrayList<>();
-        List<String> critNameTemp = new ArrayList<>();
-        List<Integer> critPesoTemp = new ArrayList<>();
+        CriterioDTO criterioDTO;
+        List<CriterioDTO> criteriosDTO;
         Optional<List<Vaga>> optionalVagaList = vagaRepositorio.findVagaByCargo(cargo);
         List<Vaga> vagas = new ArrayList<>();
         List<Criterio> criterios = new ArrayList<>();
 
 
         if (optionalVagaList.isPresent()) vagas = optionalVagaList.get();
-        Optional<List<Criterio>> criteriosData = criterioRepositorio.findCriterioByVaga(vagas);
+        Optional<List<Criterio>> criteriosData = criterioRepositorio.findCriterioByListVaga(vagas);
         if (criteriosData.isPresent()){
             criterios = criteriosData.get();
         }
         for (Vaga v: vagas){
             VagaDTO vaga = new VagaDTO();
-            critNameTemp = new ArrayList<>();
-            critPesoTemp = new ArrayList<>();
+            criteriosDTO = new ArrayList<>();
             vaga.setCargo(v.getCargo());
             vaga.setTitulo(v.getTitulo());
             vaga.setEmail(v.getEmpresa().getEmail());
             vaga.setDataCriacao(v.getDataDeCriacao().toString());
             for (Criterio c: criterios){
                 if (c.getVagaId() == v){
-                    critNameTemp.add(c.getSkillNome());
-                    critPesoTemp.add(c.getPeso());
+                    criterioDTO = new CriterioDTO();
+                    criterioDTO.setCriterios(c.getCriterioNome());
+                    criterioDTO.setPesos(c.getPeso());
+                    criteriosDTO.add(criterioDTO);
                 }
             }
-            vaga.setCriterios(critNameTemp);
-            vaga.setPesos(critPesoTemp);
+            vaga.setCriterios(criteriosDTO);
             respostaVagas.add(vaga);
         }
 
         return respostaVagas;
     }
 
+    @Override
+    public void reativarVaga(Long idVaga) {
+        Optional<Vaga> respostaBD = vagaRepositorio.findById(idVaga);
+        Vaga vaga = null;
+        if (respostaBD.isEmpty()){
+            throw new BadRequestException("Vaga não encontrada");
+        }
+        vaga = respostaBD.get();
+        long miliseconds = System.currentTimeMillis();
+        Date date = new Date(miliseconds);
+        vaga.setStatus(VagaEnum.STATUS_VAGA_ATIVO.getValor());
+        vaga.setDataDeCriacao(date);
+        vagaRepositorio.save(vaga);
+    }
+
+    @Override
+    public List<VagaDTO> getAllVagasPeloTipo(String email) {
+        String critNameTemp;
+        String critPesoTemp;
+        Optional<Usuario> userData = usuarioRepositorio.findByEmail(email);
+        Usuario usuario ;
+        List<CriterioDTO> criteriosDTO;
+        List<VagaDTO> respostaVagas = new ArrayList<>();
+        List<Criterio> criterios = new ArrayList<>();
+        List<Vaga> vagas = new ArrayList<>();
+        List<Long> vagaIds = new ArrayList<>();
+
+
+        if (userData.isPresent()){
+            usuario = userData.get();
+        }else {
+            throw new BadRequestException("Usuáiro não encontrado");
+        }
+
+
+
+        if (usuario instanceof Candidato){
+            Optional<List<Vaga>> optionalVagaList = vagaRepositorio.findVagaByStatus(1);
+            if (optionalVagaList.isPresent()) vagas = optionalVagaList.get();
+            for (Vaga v: vagas){
+                vagaIds.add(v.getVagaId());
+            }
+            Optional<List<Criterio>> c = criterioRepositorio.findCriterioByListVaga(vagas);
+            if (c.isPresent()){
+                criterios = c.get();
+            }
+        }else if (usuario instanceof Empresa){
+            Empresa empresa = (Empresa) usuario;
+            Optional<List<Vaga>> optionalVagaList = vagaRepositorio.findVagaByEmpresa(empresa);
+            if (optionalVagaList.isPresent()) vagas = optionalVagaList.get();
+            for (Vaga v: vagas){
+                vagaIds.add(v.getVagaId());
+            }
+            Optional<List<Criterio>> c = criterioRepositorio.findCriterioByListVaga(vagas);
+            if (c.isPresent()){
+                criterios = c.get();
+            }
+        }
+
+        for (Vaga v: vagas){
+            VagaDTO vaga = new VagaDTO();
+            criteriosDTO = new ArrayList<>();
+            vaga.setVagaId(v.getVagaId());
+            vaga.setCargo(v.getCargo());
+            vaga.setTitulo(v.getTitulo());
+            vaga.setEmail(v.getEmpresa().getEmail());
+            vaga.setDataCriacao(v.getDataDeCriacao().toString());
+            for (Criterio c: criterios){
+                if (c.getVagaId() == v){
+                    CriterioDTO critDto = new CriterioDTO();
+                    critDto.setCriterios(c.getCriterioNome());
+                    critDto.setPesos(c.getPeso());
+                    criteriosDTO.add(critDto);
+                }
+            }
+            vaga.setCriterios(criteriosDTO);
+//            vaga.setPesos(critPesoTemp);
+            respostaVagas.add(vaga);
+        }
+        return respostaVagas;
+
+    }
+
+    @Override
+    public Optional<Vaga> pesquisarVagaPorId(long id) {
+
+        return vagaRepositorio.findById(id);
+    }
+
     public void criacaoCriterio(Vaga vaga, VagaDTO vagaDTO){
-        for (String i : vagaDTO.getCriterios()){
+        for (CriterioDTO i : vagaDTO.getCriterios()){
             Criterio criterio = new Criterio();
-            criterio.setSkillNome(i);
-            criterio.setPeso(vagaDTO.getPesos().get(vagaDTO.getCriterios().indexOf(i)));
+            criterio.setCriterioNome(i.getCriterios());
+            criterio.setPeso(i.getPesos());
             criterio.setVagaId(vaga);
             criterioRepositorio.save(criterio);
         }
     }
+
+
 }

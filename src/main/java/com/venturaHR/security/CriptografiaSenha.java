@@ -1,4 +1,4 @@
-package com.venturaHR.ServiceImpl.security;
+package com.venturaHR.security;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.util.text.BasicTextEncryptor;

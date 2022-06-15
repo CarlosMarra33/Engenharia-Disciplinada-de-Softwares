@@ -1,11 +1,11 @@
 package com.venturaHR.ServiceImpl;
 
-import com.venturaHR.ServiceImpl.security.CriptografiaSenha;
+import com.venturaHR.security.CriptografiaSenha;
 //import com.venturaHR.ServiceImpl.security.SegurancaServiceImpl;
-import com.venturaHR.ServiceImpl.security.TokenUtil;
-import com.venturaHR.controller.dto.UserLoginDTO;
+import com.venturaHR.security.TokenUtil;
+import com.venturaHR.dto.UserLoginDTO;
 import com.venturaHR.common.UsuarioEnum;
-import com.venturaHR.controller.dto.VagaDTO;
+import com.venturaHR.dto.VagaDTO;
 import com.venturaHR.entity.*;
 import com.venturaHR.exception.BadRequestException;
 import com.venturaHR.repository.ICriterioRepositorio;
@@ -15,7 +15,7 @@ import com.venturaHR.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.venturaHR.controller.dto.UsuarioDTO;
+import com.venturaHR.dto.UsuarioDTO;
 import com.venturaHR.repository.IUsuarioRepositorio;
 
 import java.util.ArrayList;
@@ -27,10 +27,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private IUsuarioRepositorio usuarioRepositorio;
-    @Autowired
-    private IVagaRepositorio vagaRepositorio;
-//    @Autowired
-//    private SegurancaServiceImpl segurancaServiceImpl;
     @Autowired
     private ICriterioRepositorio criterioRepositorio;
 
@@ -85,13 +81,13 @@ public class UsuarioServiceImpl implements UsuarioService {
             user.setEmail(resposta.getEmail());
             user.setTipoConta(identificarTipoConta(resposta));
             user.setToken(TokenUtil.createToken(resposta.getEmail()));
-            if (identificarTipoConta(resposta).equals("Empresa")){
+            if (identificarTipoConta(resposta) == UsuarioEnum.TIPO_CONTA_EMPRESA.getValor()){
                 Empresa userEmpresa = (Empresa) resposta;
                 user.setCnpj(userEmpresa.getCpnj());
-            }else if (identificarTipoConta(resposta).equals("Candidato")){
+            }else if (identificarTipoConta(resposta) == UsuarioEnum.TIPO_CONTA_CANDIDATO.getValor()){
                 Candidato userCandidato = (Candidato) resposta;
                 user.setCpf(userCandidato.getCpf());
-            }else if (identificarTipoConta(resposta).equals("Admin")){
+            }else if (identificarTipoConta(resposta) == UsuarioEnum.TIPO_CONTA_ADMIN.getValor()){
                 Admin userAdmin = (Admin) resposta;
                 user.setMatricula(userAdmin.getMatricula());
             }
@@ -116,80 +112,18 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioRepositorio.save(usuario);
     }
 
-    @Override
-    public List<VagaDTO> getAllVagasPeloTipo(String email) {
-        List<String> critNameTemp = new ArrayList<>();
-        List<Integer> critPesoTemp = new ArrayList<>();
-        Optional<Usuario> userData = usuarioRepositorio.findByEmail(email);
-        Usuario usuario ;
 
 
-        if (userData.isPresent()){
-            usuario = userData.get();
-        }else {
-            throw new BadRequestException("Usuáiro não encontrado");
-        }
 
-        List<VagaDTO> respostaVagas = new ArrayList<>();
-        List<Criterio> criterios = new ArrayList<>();
-        List<Vaga> vagas = new ArrayList<>();
-        List<Long> vagaIds = new ArrayList<>();
-
-        if (usuario instanceof Candidato){
-            Optional<List<Vaga>> optionalVagaList = vagaRepositorio.findVagaByStatus(1);
-            if (optionalVagaList.isPresent()) vagas = optionalVagaList.get();
-            for (Vaga v: vagas){
-                vagaIds.add(v.getVagaId());
-            }
-            Optional<List<Criterio>> c = criterioRepositorio.findCriterioByVaga(vagas);
-            if (c.isPresent()){
-                criterios = c.get();
-            }
-        }else if (usuario instanceof Empresa){
-            Empresa empresa = (Empresa) usuario;
-            Optional<List<Vaga>> optionalVagaList = vagaRepositorio.findVagaByEmpresa(empresa);
-            if (optionalVagaList.isPresent()) vagas = optionalVagaList.get();
-            for (Vaga v: vagas){
-                vagaIds.add(v.getVagaId());
-            }
-            Optional<List<Criterio>> c = criterioRepositorio.findCriterioByVaga(vagas);
-            if (c.isPresent()){
-                criterios = c.get();
-            }
-        }
-
-        for (Vaga v: vagas){
-            VagaDTO vaga = new VagaDTO();
-            critNameTemp = new ArrayList<>();
-            critPesoTemp = new ArrayList<>();
-            vaga.setCargo(v.getCargo());
-            vaga.setTitulo(v.getTitulo());
-            vaga.setEmail(v.getEmpresa().getEmail());
-            vaga.setDataCriacao(v.getDataDeCriacao().toString());
-            for (Criterio c: criterios){
-                if (c.getVagaId() == v){
-                    critNameTemp.add(c.getSkillNome());
-                    critPesoTemp.add(c.getPeso());
-                }
-            }
-            vaga.setCriterios(critNameTemp);
-            vaga.setPesos(critPesoTemp);
-            respostaVagas.add(vaga);
-        }
-        return respostaVagas;
-
-    }
-
-
-    private String identificarTipoConta(Usuario user){
+    private int identificarTipoConta(Usuario user){
         if (user instanceof Candidato){
-            return "Candidato";
+            return UsuarioEnum.TIPO_CONTA_CANDIDATO.getValor();
         }else if (user instanceof Empresa){
-            return "Empresa";
+            return UsuarioEnum.TIPO_CONTA_EMPRESA.getValor();
         }else if (user instanceof Admin){
-            return "Admin";
+            return UsuarioEnum.TIPO_CONTA_ADMIN.getValor();
         }else {
-            return null;
+            return 0;
         }
     }
 }

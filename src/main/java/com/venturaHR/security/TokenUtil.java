@@ -1,4 +1,4 @@
-package com.venturaHR.ServiceImpl.security;
+package com.venturaHR.security;
 
 import com.venturaHR.entity.Usuario;
 import com.venturaHR.exception.UnauthorizedException;

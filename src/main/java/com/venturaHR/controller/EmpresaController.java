@@ -1,7 +1,9 @@
 package com.venturaHR.controller;
 
-import com.venturaHR.controller.dto.UsuarioDTO;
-import com.venturaHR.controller.dto.VagaDTO;
+import com.venturaHR.dto.CandidatoDTO;
+import com.venturaHR.dto.VagaDTO;
+import com.venturaHR.entity.Usuario;
+import com.venturaHR.service.RespostaVagaService;
 import com.venturaHR.service.UsuarioService;
 import com.venturaHR.service.VagaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ public class EmpresaController {
     private VagaService vagaService;
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private RespostaVagaService respostaVagaService;
 
     @PostMapping("/criacao")
     public ResponseEntity<?> criarVaga(@RequestBody VagaDTO payload){
@@ -31,20 +35,17 @@ public class EmpresaController {
     }
 
     @PostMapping("/desativar_vaga")
-    public ResponseEntity<?> desativarVaga(@RequestParam Long idVaga, @RequestHeader String token) {
-
+    public ResponseEntity<?> desativarVaga(@RequestBody Long idVaga) {
         try {
-//            if(!segurancaService.validacao(token)) {
-//                throw new UnauthorizedException("token inválido!");
-//            }
             vagaService.desativarVaga(idVaga);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @PostMapping("/cancelar_vaga")
-    public ResponseEntity<?> cancelarVaga(@RequestParam Long idVaga){
+    public ResponseEntity<?> cancelarVaga(@RequestBody Long idVaga){
         try {
             vagaService.cancelarVaga(idVaga);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -52,21 +53,35 @@ public class EmpresaController {
             return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
     }
-    @GetMapping("/pesquisarVaga")
-    public ResponseEntity pesquisarVaga(@RequestBody String cargo){
+
+    @PostMapping("/reativar_vaga")
+    public ResponseEntity reativarVaga(@RequestBody Long idVaga){
         try{
-            List<VagaDTO> listVagas = vagaService.pesquisarVagaPorCargo(cargo);
-            return ResponseEntity.ok(listVagas);
-        }catch (Exception e){
+            vagaService.reativarVaga(idVaga);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity(e.toString(), HttpStatus.BAD_REQUEST);
         }
     }
+    
+
 
     @GetMapping("/home")
-    public ResponseEntity home(@RequestBody UsuarioDTO payload){
+    public ResponseEntity home(@RequestParam String email){
         try {
-            List<VagaDTO> listaVagas = usuarioService.getAllVagasPeloTipo(payload.getEmail());
+            List<VagaDTO> listaVagas = vagaService.getAllVagasPeloTipo(email);
             return ResponseEntity.ok(listaVagas);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GetMapping("/lista-candidatos")
+    public ResponseEntity listarCandidatos(@RequestParam long vagaId){
+        try {
+            List<CandidatoDTO> usuarioList = respostaVagaService.listarCandidatos(vagaId);
+            return ResponseEntity.ok(usuarioList);
         } catch (Exception e) {
             e.printStackTrace();
         }
