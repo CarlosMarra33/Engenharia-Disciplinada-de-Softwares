@@ -1,8 +1,7 @@
 package com.venturaHR.controller;
 
-import com.venturaHR.dto.CandidatoDTO;
-import com.venturaHR.dto.VagaDTO;
-import com.venturaHR.entity.Usuario;
+import com.venturaHR.controller.dto.CandidatoDTO;
+import com.venturaHR.controller.dto.VagaDTO;
 import com.venturaHR.service.RespostaVagaService;
 import com.venturaHR.service.UsuarioService;
 import com.venturaHR.service.VagaService;

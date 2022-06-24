@@ -5,7 +5,7 @@
 package com.venturaHR.controller;
 
 
-import com.venturaHR.dto.UserLoginDTO;
+import com.venturaHR.controller.dto.UserLoginDTO;
 import com.venturaHR.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.venturaHR.dto.UsuarioDTO;
+import com.venturaHR.controller.dto.UsuarioDTO;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

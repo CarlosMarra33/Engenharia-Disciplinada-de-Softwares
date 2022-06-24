@@ -1,6 +1,6 @@
 package com.venturaHR.repository;
 
-import com.venturaHR.entity.Usuario;
+import com.venturaHR.domain.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

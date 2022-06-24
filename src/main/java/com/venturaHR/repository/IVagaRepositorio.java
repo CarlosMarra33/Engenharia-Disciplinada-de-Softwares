@@ -1,7 +1,7 @@
 package com.venturaHR.repository;
 
-import com.venturaHR.entity.Empresa;
-import com.venturaHR.entity.Vaga;
+import com.venturaHR.domain.entity.Empresa;
+import com.venturaHR.domain.entity.Vaga;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

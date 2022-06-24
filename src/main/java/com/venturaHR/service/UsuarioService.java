@@ -1,10 +1,7 @@
 package com.venturaHR.service;
 
-import com.venturaHR.dto.UserLoginDTO;
-import com.venturaHR.dto.UsuarioDTO;
-import com.venturaHR.dto.VagaDTO;
-
-import java.util.List;
+import com.venturaHR.controller.dto.UserLoginDTO;
+import com.venturaHR.controller.dto.UsuarioDTO;
 
 public interface UsuarioService {
     void criacaoDeConta(UsuarioDTO usuario) throws Exception;

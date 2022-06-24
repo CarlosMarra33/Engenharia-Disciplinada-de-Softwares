@@ -1,7 +1,7 @@
 package com.venturaHR.service;
 
-import com.venturaHR.dto.CandidatoDTO;
-import com.venturaHR.entity.RespostaVaga;
+import com.venturaHR.controller.dto.CandidatoDTO;
+import com.venturaHR.domain.entity.RespostaVaga;
 
 import java.util.List;
 

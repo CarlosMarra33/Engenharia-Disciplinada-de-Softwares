@@ -1,7 +1,8 @@
 package com.venturaHR.controller;
 
-import com.venturaHR.dto.RespostaVagaDTO;
-import com.venturaHR.dto.VagaDTO;
+import com.venturaHR.controller.dto.RespostaVagaDTO;
+import com.venturaHR.controller.dto.VagaDTO;
+import com.venturaHR.domain.entity.Vaga;
 import com.venturaHR.service.CandidatoService;
 import com.venturaHR.service.UsuarioService;
 import com.venturaHR.service.VagaService;
@@ -33,6 +34,13 @@ public class CandidatoController {
         }
         return  null;
     }
+
+    @GetMapping("/pegarTodasVagas")
+    public ResponseEntity<?> pegarTodasVagas(){
+        List<Vaga> listaVagas = vagaService.pegarTodas();
+        return ResponseEntity.ok(listaVagas);
+    }
+
     @GetMapping("/pesquisarVaga")
     public ResponseEntity pesquisarVaga(@RequestBody String cargo){
         try{
